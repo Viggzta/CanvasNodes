@@ -16,8 +16,30 @@ namespace CanvasNodes.DrawNodes
 		private Canvas parentCanvas;
 		private NodeBody parent;
 		private Ellipse ellipse;
-		private Point offset;
 		public List<NodeEdge> edges;
+
+		private bool isActive;
+
+		public bool Active
+		{
+			get => isActive;
+			set
+			{
+				if (isActive != value)
+				{
+					isActive = value;
+					UpdateColor();
+					if (IsOutput)
+					{
+						NotifyEdges(isActive);
+					}
+					else
+					{
+						parent.OnInput();
+					}
+				}
+			}
+		}
 
 		public bool IsOutput { get; private set; }
 
@@ -29,19 +51,20 @@ namespace CanvasNodes.DrawNodes
 		{
 			get => new Vector(ellipse.Width / 2, ellipse.Height / 2);
 		}
+		public Point Offset { get; set; }
 
 		public NodeSocket(Canvas parentCanvas, NodeBody parent, Point offset, bool isOutput)
 		{
 			this.parentCanvas = parentCanvas;
 			this.parent = parent;
-			this.offset = offset;
+			this.Offset = offset;
 			IsOutput = isOutput;
 			edges = new List<NodeEdge>();
 
 			ellipse = new Ellipse();
 			ellipse.Width = 10;
 			ellipse.Height = 10;
-			ellipse.Fill = BlackBoard.AxisRed;
+			UpdateColor();
 
 			ellipse.MouseDown += AddEdge;
 			ellipse.MouseUp += AddEdgeEnd;
@@ -53,10 +76,30 @@ namespace CanvasNodes.DrawNodes
 			Canvas.SetTop(ellipse, parent.Position.Y + offset.Y);
 		}
 
+		private void NotifyEdges(bool value)
+		{
+			foreach (NodeEdge edge in edges)
+			{
+				edge.Active = value;
+			}
+		}
+
+		private void UpdateColor()
+		{
+			if (Active)
+			{
+				ellipse.Fill = BlackBoard.AxisRed;
+			}
+			else
+			{
+				ellipse.Fill = Brushes.Black;
+			}
+		}
+
 		public void MoveWithParent()
 		{
-			Canvas.SetLeft(ellipse, parent.Position.X + offset.X - (ellipse.Width / 2));
-			Canvas.SetTop(ellipse, parent.Position.Y + offset.Y - (ellipse.Height / 2));
+			Canvas.SetLeft(ellipse, parent.Position.X + Offset.X - (ellipse.Width / 2));
+			Canvas.SetTop(ellipse, parent.Position.Y + Offset.Y - (ellipse.Height / 2));
 		}
 
 		private void AddEdge(object sender, RoutedEventArgs e)
@@ -73,6 +116,7 @@ namespace CanvasNodes.DrawNodes
 			if (!IsOutput && BlackBoard.HeldEdge != null)
 			{
 				BlackBoard.HeldEdge.to = this;
+				BlackBoard.HeldEdge.to.Active = BlackBoard.HeldEdge.Active;
 				edges.Add(BlackBoard.HeldEdge);
 				BlackBoard.HeldEdge = null;
 			}

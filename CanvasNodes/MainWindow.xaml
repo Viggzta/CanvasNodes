@@ -16,18 +16,73 @@
 		</Grid.RowDefinitions>
 		<Grid
 			Column="0">
-			<Button
+			<StackPanel>
+				<TextBlock
+					Margin="4 2 4 0">
+					Triggers
+				</TextBlock>
+				<Button
+					Width="200"
+					Click="AddSignalNode_OnClick"
+					Margin="4 4 4 2">
+					Signal
+				</Button>
+
+				<Separator/>
+				<TextBlock
+					Margin="4 2 4 0">
+					Conditions
+				</TextBlock>
+				<Button
 				Width="200"
-				Click="ButtonBase_OnClick">
-				Add node
-			</Button>
+				Click="AddAndNode_OnClick"
+				Margin="4 4 4 2">
+					AND
+				</Button>
+				<Button
+				Width="200"
+				Click="AddOrNode_OnClick"
+				Margin="4 2 4 2">
+					OR
+				</Button>
+				<Button
+				Width="200"
+				Click="AddNotNode_OnClick"
+				Margin="4 2 4 2">
+					NOT
+				</Button>
+				<Button
+				Width="200"
+				Click="AddToggleNode_OnClick"
+				Margin="4 2 4 2">
+					Toggle
+				</Button>
+				<Button
+				Width="200"
+				Click="AddTimedNode_OnClick"
+				Margin="4 2 4 2">
+					Timed
+				</Button>
+
+				<Separator/>
+				<TextBlock
+					Margin="4 2 4 0">
+					Actions
+				</TextBlock>
+				<Button
+					Width="200"
+					Click="AddCameraRecordNode_OnClick"
+					Margin="4 2 4 2">
+					Record camera
+				</Button>
+			</StackPanel>
 		</Grid>
 		<Grid
 			Column="1">
 			<Canvas
 				x:Name="nodeCanvas"
 				Background="White">
-				
+
 			</Canvas>
 		</Grid>
 	</Grid>

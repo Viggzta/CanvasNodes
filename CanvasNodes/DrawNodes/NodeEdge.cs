@@ -21,6 +21,25 @@ namespace CanvasNodes.DrawNodes
 		public NodeSocket from;
 		public NodeSocket to;
 
+		private bool isActive;
+
+		public bool Active
+		{
+			get => isActive;
+			set
+			{
+				if (isActive != value)
+				{
+					isActive = value;
+					UpdateColor();
+					if (to != null)
+					{
+						to.Active = Active;
+					}
+				}
+			}
+		}
+
 		public NodeEdge(Canvas parentCanvas, NodeSocket from)
 		{
 			this.parentCanvas = parentCanvas;
@@ -29,9 +48,9 @@ namespace CanvasNodes.DrawNodes
 			offset = from.Origin;
 
 			line = new Polyline();
-			line.Stroke = Brushes.Black;
 			line.StrokeThickness = 2;
 			Canvas.SetZIndex(line, -1);
+			UpdateColor();
 
 			points = new PointCollection();
 			points.Add(from.Position + offset);
@@ -43,13 +62,24 @@ namespace CanvasNodes.DrawNodes
 			line.MouseRightButtonDown += SelfDestruct;
 
 			parentCanvas.Children.Add(line);
+
+			Active = from.Active;
+		}
+
+		private void UpdateColor()
+		{
+			line.Stroke = Active ? BlackBoard.AxisRed : Brushes.Black;
 		}
 
 		private void SelfDestruct(object sender, MouseButtonEventArgs e)
 		{
+			if (to != null)
+			{
+				to.Active = false;
+			}
 			parentCanvas.Children.Remove(line);
 			from.edges.Remove(this);
-			to.edges.Remove(this);
+			to?.edges.Remove(this);
 		}
 
 		private void Move(object sender, RoutedEventArgs e)

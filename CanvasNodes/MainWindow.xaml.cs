@@ -14,6 +14,10 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using CanvasNodes.DrawNodes;
+using CanvasNodes.DrawNodes.Actions;
+using CanvasNodes.DrawNodes.Conditions;
+using CanvasNodes.DrawNodes.LogicGates;
+using CanvasNodes.DrawNodes.Triggers;
 
 namespace CanvasNodes
 {
@@ -28,15 +32,38 @@ namespace CanvasNodes
 			InitializeComponent();
 		}
 
-		private void AddNode()
+		// Triggers
+		private void AddSignalNode_OnClick(object sender, RoutedEventArgs e)
 		{
-			NodeBody n = new NodeBody(nodeCanvas);
-			n.AddSocket();
+			new SignalNode(nodeCanvas);
 		}
 
-		private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
+		// Conditions
+		private void AddAndNode_OnClick(object sender, RoutedEventArgs e)
 		{
-			AddNode();
+			new AndNode(nodeCanvas);
+		}
+		private void AddOrNode_OnClick(object sender, RoutedEventArgs e)
+		{
+			new OrNode(nodeCanvas);
+		}
+		private void AddNotNode_OnClick(object sender, RoutedEventArgs e)
+		{
+			new NotNode(nodeCanvas);
+		}
+		private void AddToggleNode_OnClick(object sender, RoutedEventArgs e)
+		{
+			new ToggleSwitchNode(nodeCanvas);
+		}
+		private void AddTimedNode_OnClick(object sender, RoutedEventArgs e)
+		{
+			new TimedNode(nodeCanvas);
+		}
+
+		// Actions
+		private void AddCameraRecordNode_OnClick(object sender, RoutedEventArgs e)
+		{
+			new RecordCameraNode(nodeCanvas);
 		}
 	}
 }
